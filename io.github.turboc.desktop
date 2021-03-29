@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=TurboC
+Comment=Turbo C 3 
+Exec=turboc
+Icon=io.github.turboc
+Terminal=false
+Type=Application
+Categories=System;Emulator;

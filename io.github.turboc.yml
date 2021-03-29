@@ -1,0 +1,86 @@
+---
+app-id: io.github.turboc
+runtime: org.freedesktop.Platform
+runtime-version: '20.08'
+sdk: org.freedesktop.Sdk
+finish-args:
+- "--device=all"
+- "--share=ipc"
+- "--socket=x11"
+- "--socket=pulseaudio"
+- "--persist=~/.dosbox"
+- "--filesystem=~/.dosbox/turboc3:create"
+
+command: turboc
+
+cleanup:
+- "/include"
+- "/lib/pkgconfig"
+- "/share/aclocal"
+- "/share/man"
+- "*.la"
+- "*.a"
+modules:
+- shared-modules/glu/glu-9.json
+- shared-modules/SDL/SDL-1.2.15.json
+- shared-modules/SDL/SDL_net-1.2.8.json
+- name: SDL_sound
+  rm-configure: true
+  config-opts:
+  - "--disable-static"
+  sources:
+  - type: archive
+    url: https://icculus.org/SDL_sound/downloads/SDL_sound-1.0.3.tar.gz
+    sha256: 3999fd0bbb485289a52be14b2f68b571cb84e380cc43387eadf778f64c79e6df
+  - type: script
+    commands:
+    - AUTOMAKE="automake --foreign" autoreconf -fiv
+    dest-filename: autogen.sh
+
+- name: dosbox
+  rm-configure: true
+  sources:
+  - type: archive
+    url: https://downloads.sourceforge.net/project/dosbox/dosbox/0.74-3/dosbox-0.74-3.tar.gz
+    sha256: c0d13dd7ed2ed363b68de615475781e891cd582e8162b5c3669137502222260a
+  - type: file
+    path: io.github.turboc.png
+  - type: file
+    path: io.github.turboc.desktop
+  - type: script
+    commands:
+    - autoreconf -fiv
+    - sed 's/.*Kill DOSBox.*$//g' -i src/dos/dos_programs.cpp
+    - sleep 5s
+    dest-filename: autogen.sh
+    
+  post-install:
+  - install -Dm644 io.github.turboc.desktop /app/share/applications/io.github.turboc.desktop
+  - install -Dm644 io.github.turboc.png /app/share/icons/hicolor/128x128/apps/io.github.turboc.png
+
+
+- name: dosbox-config
+  buildsystem: simple
+  sources:
+  - type: file
+    path: dosbox.tar.xz
+  build-commands:
+    - mkdir -p /app/.dosbox
+    - tar -hxvf dosbox.tar.xz -C /app
+    
+
+- name: turboc
+  buildsystem: simple
+  sources:
+  - type: file
+    path: turboc3.tar.xz
+  build-commands:
+    - tar -hxvf turboc3.tar.xz -C /app/.dosbox
+    # on application launch copy the files
+    - mkdir -p ~/.dosbox
+    - echo "cp -rn /app/.dosbox/* ~/.dosbox"  
+              > /app/bin/turboc
+    - echo     "/app/bin/dosbox  -exit ~/.dosbox/turboc3/BIN/TC.exe " 
+             >> /app/bin/turboc
+    - chmod +rx /app/bin/turboc
+
