@@ -1,4 +1,4 @@
-# Install SDK and Runtimes
+#### Install SDK and Runtimes
 sudo flatpak --system remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak -y --system install      \
      org.freedesktop.Sdk/x86_64/20.08 \
