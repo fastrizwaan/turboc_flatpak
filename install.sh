@@ -1,18 +1,3 @@
-# turboc_flatpak
-Borland TurboC++ compiler in DosBox 
-
-### Important: Ctrl+F9 will kill dosbox - run/execute won't work
-Use Alt+R + Enter keys to run compiled C/C++ programs
-
-### Dosbox grabs mouse, free the Mouse by pressing CTRL+F10 key
-
-
-![](https://github.com/fastrizwaan/turboc_flatpak/raw/main/io.github.turboc.png)
-
-![](https://github.com/fastrizwaan/turboc_flatpak/raw/main/turboc.png)
-
-
-## BUILD and INSTALL
 # Install SDK and Runtimes
 sudo flatpak --system remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak -y --system install      \
